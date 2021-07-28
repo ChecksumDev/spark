@@ -44,7 +44,7 @@ fi
 if curl -s -4 -w '%{http_code}' -o /dev/null 1.1.1.1 >/dev/null; then
     echo -e "$NC" >> /dev/null
 else
-    echo -e "$RED> No internet connection found."
+    echo -e "$RED> This script requires an internet connection to run, restart the script when you have an internet connection."
     exit 1
 fi
 
