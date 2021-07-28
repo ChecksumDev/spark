@@ -98,6 +98,8 @@ if [ -f /etc/apt/sources.list ]; then
     mv /etc/apt/sources.list /etc/apt/sources.list.bak
 fi
 
+echo -e "$YELLOW> Generating mirror list...$NC"
+
 {
     echo "#   _____                  __  "
     echo "#  / ___/____  ____ ______/ /__"
@@ -110,8 +112,6 @@ fi
     echo "# Check us out on https://github.com/ChecksumDev/spark"
     echo ""
 } >>/etc/apt/sources.list
-
-echo -e "$YELLOW> Generating mirror list...$NC"
 
 for i in $MIRRORS; do
     DOMAIN=$(echo "$i" | cut -d'/' -f3)
