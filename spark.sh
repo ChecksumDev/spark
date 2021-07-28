@@ -22,7 +22,7 @@ NC='\033[0m' # No Color
 
 # check if the user is root
 if [ "$(id -u)" != "0" ]; then
-    echo -e "$RED> You must be root to run this script, please use root to generate the mirrors."
+    echo -e "$RED> You must be root to run this script."
     exit 1
 fi
 
@@ -30,6 +30,16 @@ fi
 if [ ! -f /usr/bin/apt ]; then
     echo -e "$RED> This distribution is not supported by this script."
     exit 1
+fi
+
+# check if net-tools are installed, if not install it
+if [ ! -f /usr/bin/net-tools ]; then
+    echo -e "$YELLOW> net-tools is not installed, installing.."
+    apt install -y net-tools
+    if [ $? -ne 0 ]; then
+        echo -e "$RED> Failed to install net-tools."
+        exit 1
+    fi
 fi
 
 # check if there is an internet connection
@@ -40,7 +50,7 @@ fi
 
 # check if curl is installed
 if [ ! -f /usr/bin/curl ]; then
-    echo "curl is not installed, installing.."
+    echo "$YELLOW> curl is not installed, installing..."
     apt-get install curl -y
     if [ $? -ne 0 ]; then
         echo -e "$RED> curl failed to install, please install curl and run this script again."
@@ -51,7 +61,7 @@ fi
 # check if wget is installed
 if [ ! -x "$(command -v wget)" ]; then
     # install wget
-    echo -e "$YELLOW> Installing wget$NC"
+    echo -e "$YELLOW> wget is not installed, installing...$NC"
     apt-get install -y wget
     if [ $? -ne 0 ]; then
         echo "$RED> wget failed to install, please install wget and run this script again$NC"
@@ -101,7 +111,7 @@ fi
 echo -e "$YELLOW> Generating mirror list...$NC"
 
 {
-    echo "#   _____                  __  "
+    echo "#   _____                  __"
     echo "#  / ___/____  ____ ______/ /__"
     echo "#  \__ \/ __ \/ __ / ___/ / /_/"
     echo -e "#  ___/ / /_/ / /_/ / /  / \`,<"
