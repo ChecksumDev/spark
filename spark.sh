@@ -4,16 +4,14 @@
 #   \__ \/ __ \/ __ `/ ___/ //_/
 #  ___/ / /_/ / /_/ / /  / ,<
 # /____/ .___/\__,_/_/  /_/|_|
-#     /_/ v 1.3.0
+#     /_/ v 2.0.0
 #
 # Copyright (c) 2021 ChecksumDev.
 # Licensed under the GNU GPLv3.
 
 # globals
 COUNT=0
-VERSION=1.3.0
-DISTRO=$(lsb_release -sc)
-MIRRORS="$(wget -qO - mirrors.ubuntu.com/mirrors.txt)"
+VERSION=2.0.0
 
 # colors
 RED='\033[0;31m'
@@ -42,12 +40,6 @@ if [ ! -f /bin/ping ]; then
     fi
 fi
 
-# check if there is an internet connection
-if [ -z "$(ping -c 1 -W 1 1.1.1.1)" ]; then
-    echo -e "$RED> No internet connection detected, please connect to the internet and run this script again$NC"
-    exit 1
-fi
-
 # check if curl is installed
 if [ ! -f /usr/bin/curl ]; then
     echo "$YELLOW> curl is not installed, installing..."
@@ -58,16 +50,16 @@ if [ ! -f /usr/bin/curl ]; then
     fi
 fi
 
-# check if wget is installed
-if [ ! -x "$(command -v wget)" ]; then
-    # install wget
-    echo -e "$YELLOW> wget is not installed, installing...$NC"
-    apt-get install -y wget
-    if [ $? -ne 0 ]; then
-        echo "$RED> wget failed to install, please install wget and run this script again$NC"
-        exit 1
-    fi
+# check if there is an internet connection using curl
+if curl -s -4 -w '%{http_code}' -o /dev/null 1.1.1.1 >/dev/null; then
+    echo -e "$NC" >> /dev/null
+else
+    echo -e "$RED> No internet connection found."
+    exit 1
 fi
+
+DISTRO=$(lsb_release -sc)
+MIRRORS="$(curl -s -L mirrors.ubuntu.com/mirrors.txt)"
 
 echo -e "$YELLOW   _____                  __  "
 echo -e "$YELLOW  / ___/____  ____ ______/ /__"
@@ -103,11 +95,15 @@ else
     fi
 fi
 
+echo -e "$NC"
+
 if [ -f /etc/apt/sources.list ]; then
-    echo -e "$YELLOW> Backing up /etc/apt/sources.list -> /etc/apt/sources.list.spark.bak$NC"
+    echo -e -n "$YELLOW> Backing up /etc/apt/sources.list$NC"
     mv /etc/apt/sources.list /etc/apt/sources.list.bak
+    echo -e "$YELLOW Done!$NC"
 fi
 
+echo -e "$NC"
 echo -e "$YELLOW> Generating mirror list...$NC"
 
 {
@@ -124,10 +120,12 @@ echo -e "$YELLOW> Generating mirror list...$NC"
 } >>/etc/apt/sources.list
 
 for i in $MIRRORS; do
-    DOMAIN=$(echo "$i" | cut -d'/' -f3)
-
-    # check if the mirror is available via pinging the domain.
-    if [ -z "$(ping -c 1 -W 1 "$DOMAIN")" ] >>/dev/null; then
+    DOMAIN="$(echo "$i" | cut -d'/' -f3)"
+    curl -s -o /dev/null "$DOMAIN"
+    if [ "$?" -eq 0 ]; then
+        echo "deb $i $DISTRO main restricted universe multiverse" >>/etc/apt/sources.list
+        echo -e "$YELLOW> The mirror $DOMAIN was added to /etc/apt/sources.list$NC"
+    else
         echo -e "$RED > Mirror $DOMAIN is not available$NC"
         count=$((count + 1))
         continue
@@ -137,10 +135,8 @@ for i in $MIRRORS; do
     if [ $((++max)) -gt $((COUNT + 15)) ]; then
         break
     fi
-
-    echo "deb $i $DISTRO main restricted universe multiverse" >>/etc/apt/sources.list
-    echo -e "$YELLOW> The mirror $DOMAIN was added to /etc/apt/sources.list$NC"
 done
 
+echo -e "$NC"
 echo -e "$YELLOW> Success!$NC"
 exit 0
