@@ -93,9 +93,8 @@ else
     fi
 fi
 
-# backup any existing sources.list file
-echo -e "$YELLOW> Backing up any existing /etc/apt/sources.list ->/etc/apt/sources.list.spark.bak$NC"
 if [ -f /etc/apt/sources.list ]; then
+    echo -e "$YELLOW> Backing up /etc/apt/sources.list -> /etc/apt/sources.list.spark.bak$NC"
     mv /etc/apt/sources.list /etc/apt/sources.list.bak
 fi
 
