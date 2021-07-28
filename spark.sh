@@ -4,14 +4,14 @@
 #   \__ \/ __ \/ __ `/ ___/ //_/
 #  ___/ / /_/ / /_/ / /  / ,<
 # /____/ .___/\__,_/_/  /_/|_|
-#     /_/ v 1.0.3
+#     /_/ v 1.1.0
 #
 # Copyright (c) 2021 ChecksumDev.
 # Licensed under the GNU GPLv3.
 
 # globals
 COUNT=0
-VERSION=1.0.3
+VERSION=1.1.0
 
 # colors
 RED='\033[0;31m'
@@ -120,7 +120,7 @@ for i in $MIRRORS; do
     fi
 
     # stop after the first 5 mirrors
-    if [ $((++max)) -gt $((COUNT + 5)) ]; then
+    if [ $((++max)) -gt $((COUNT + 15)) ]; then
         break
     fi
 
