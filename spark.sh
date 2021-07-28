@@ -4,14 +4,14 @@
 #   \__ \/ __ \/ __ `/ ___/ //_/
 #  ___/ / /_/ / /_/ / /  / ,<
 # /____/ .___/\__,_/_/  /_/|_|
-#     /_/ v 1.2.1
+#     /_/ v 1.3.0
 #
 # Copyright (c) 2021 ChecksumDev.
 # Licensed under the GNU GPLv3.
 
 # globals
 COUNT=0
-VERSION=1.2.1
+VERSION=1.3.0
 DISTRO=$(lsb_release -sc)
 MIRRORS="$(wget -qO - mirrors.ubuntu.com/mirrors.txt)"
 
