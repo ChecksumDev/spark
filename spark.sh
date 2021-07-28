@@ -32,8 +32,8 @@ if [ ! -f /usr/bin/apt ]; then
     exit 1
 fi
 
-# check if net-tools are installed, if not install it
-if [ ! -f /usr/bin/net-tools ]; then
+# check if net-tools are not installed, if so install them
+if [ ! -f /bin/ping ]; then
     echo -e "$YELLOW> net-tools is not installed, installing.."
     apt install -y net-tools
     if [ $? -ne 0 ]; then
@@ -142,5 +142,5 @@ for i in $MIRRORS; do
     echo -e "$YELLOW> The mirror $DOMAIN was added to /etc/apt/sources.list$NC"
 done
 
-echo -e "$NC"
 echo -e "$YELLOW> Success!$NC"
+exit 0
