@@ -33,17 +33,19 @@ if [ ! -f /usr/bin/apt ]; then
     exit 1
 fi
 
-echo -e "$YELLOW> Running spark (v$VERSION)$NC"
+echo -e "$YELLOW> Running spark.sh (v$VERSION)$NC"
 
 # if spark is out of date, update it via github
 if [ "$(curl -s https://api.github.com/repos/ChecksumDev/spark/releases/latest | grep 'tag_name' | cut -d '"' -f 4)" != "$VERSION" ]; then
     # update the script by downloading the latest version
     echo -e "$MAGENTA> spark.sh is out of date, updating...$NC"
-    curl -s https://api.github.com/repos/ChecksumDev/spark/releases/latest > spark.sh
+    curl -s https://api.github.com/repos/ChecksumDev/spark/releases/latest | grep 'browser_download_url' | cut -d '"' -f 4 | xargs -I {} curl -L {} -o spark.sh
     chmod +x spark.sh
+
+    echo -e "$GREEN> Done updating, restarting the process!$NC"
+    bash spark.sh
     
-    echo -e "$GREEN> Done updating, restart the process!$NC"
-    exit 2
+    exit 0
 fi
 
 # skip startup prompt when the noprompt bash option is set
