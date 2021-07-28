@@ -30,16 +30,6 @@ if [ ! -f /usr/bin/apt ]; then
     exit 1
 fi
 
-# check if net-tools are not installed, if so install them
-if [ ! -f /bin/ping ]; then
-    echo -e "$YELLOW> net-tools is not installed, installing.."
-    apt install -y net-tools
-    if [ $? -ne 0 ]; then
-        echo -e "$RED> Failed to install net-tools."
-        exit 1
-    fi
-fi
-
 # check if curl is installed
 if [ ! -f /usr/bin/curl ]; then
     echo "$YELLOW> curl is not installed, installing..."
