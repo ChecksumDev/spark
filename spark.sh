@@ -4,14 +4,14 @@
 #   \__ \/ __ \/ __ `/ ___/ //_/
 #  ___/ / /_/ / /_/ / /  / ,<
 # /____/ .___/\__,_/_/  /_/|_|
-#     /_/ v 1.0.2
+#     /_/ v 1.0.3
 #
 # Copyright (c) 2021 ChecksumDev.
 # Licensed under the GNU GPLv3.
 
 # globals
 COUNT=0
-VERSION=1.0.2
+VERSION=1.0.3
 
 # colors
 RED='\033[0;31m'
@@ -69,7 +69,7 @@ if [ "$(curl -s https://api.github.com/repos/ChecksumDev/spark/releases/latest |
     chmod +x spark.sh
 
     echo -e "$GREEN> Done updating, restarting the process!$NC"
-    bash spark.sh
+    bash spark.sh $1
 
     exit 0
 fi
